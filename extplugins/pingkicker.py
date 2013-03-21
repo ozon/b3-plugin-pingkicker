@@ -34,6 +34,7 @@ import thread
 import b3.events
 import b3.plugin
 import b3.cron
+from ConfigParser import NoOptionError
 
 
 class PingInfo:
@@ -57,6 +58,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
         self._ignoreTill = self.console.time() + 90
 
     def onLoadConfig(self):
+        self._load_messages()
         self._interval = self.config.getint('settings', 'interval')
         self._maxPing = self.config.getint('settings', 'max_ping')
         self._maxPingDuration = self.config.getint('settings', 'max_ping_duration')
@@ -118,3 +120,21 @@ class PingkickerPlugin(b3.plugin.Plugin):
                             if ping != 999:
                                 client.message(self.getMessage('first_ping_warning'))
 
+    def _load_messages(self):
+        """Load plugin messages."""
+        # first warning message
+        try:
+            self.getMessage('first_ping_warning')
+        except NoOptionError:
+            self._messages['first_ping_warning'] = "Your ping is too high. If you can, try to reduce it!."
+        # remind user message
+        try:
+            self.getMessage('reminder_ping_warning')
+        except NoOptionError:
+            self._messages['reminder_ping_warning'] = "Your ping is still too high. You will get kicked automatically.\
+            Nothing personal!"
+        # public kick message
+        try:
+            self.getMessage('public_ping_kick_message', {'ping': ''})
+        except NoOptionError:
+            self._messages['public_ping_kick_message'] = "because his ping was too high for this server %(ping)s."
