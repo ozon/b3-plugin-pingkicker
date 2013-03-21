@@ -59,10 +59,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
 
     def onLoadConfig(self):
         self._load_messages()
-        self._interval = self.config.getint('settings', 'interval')
-        self._maxPing = self.config.getint('settings', 'max_ping')
-        self._maxPingDuration = self.config.getint('settings', 'max_ping_duration')
-        self._max_level = self.config.getint('settings', 'max_level_checked')
+        self._load_settings()
 
         if self._cronTab:
             # remove existing crontab
@@ -120,8 +117,35 @@ class PingkickerPlugin(b3.plugin.Plugin):
                             if ping != 999:
                                 client.message(self.getMessage('first_ping_warning'))
 
+    def _load_settings(self):
+        """Load plugin settings."""
+
+        # Interval sets the scheduling time
+        try:
+            self._interval = self.config.getint('settings', 'interval')
+        except NoOptionError:
+            self.info('No config option \"settings\\interval\" found. Using default value: %s' % self._interval)
+        # allowed max ping
+        try:
+            self._maxPing = self.config.getint('settings', 'max_ping')
+        except NoOptionError:
+            self.info('No config option \"settings\\maxping\" found. Using default value: %s' % self._maxPing)
+        # ?
+        try:
+            self._maxPingDuration = self.config.getint('settings', 'max_ping_duration')
+        except NoOptionError:
+            self.info(
+                'No config option \"settings\\maxPingDuration\" found. Using default value: %s' % self._maxPingDuration)
+        # Which levels get ping checking. In this case, players with level 1 and lower gets checked
+        try:
+            self._max_level = self.config.getint('settings', 'max_level_checked')
+        except NoOptionError:
+            self.info(
+                'No config option \"settings\\max_level_checked\" found. Using default value: %s' % self._max_level)
+
     def _load_messages(self):
         """Load plugin messages."""
+
         # first warning message
         try:
             self.getMessage('first_ping_warning')
