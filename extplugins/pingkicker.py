@@ -52,6 +52,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
     _cronTab = None
     _clientvar_name = 'ping_info'
     _pings_supported = False
+    _filter_ids_supported = False
 
     def onStartup(self):
         self.registerEvent(b3.events.EVT_GAME_EXIT)
@@ -95,8 +96,11 @@ class PingkickerPlugin(b3.plugin.Plugin):
         # check player pings
         check_cids = [client.cid for client in self.console.clients.getClientsByLevel(max=self._max_level)]
         if self.isEnabled() and (self.console.time() > self._ignoreTill) and check_cids:
-            #self.console.verbose('Ping check enabled')
-            for cid, ping in self.console.getPlayerPings(filter_client_ids=check_cids).items():
+            if self._filter_ids_supported:
+                _player_pings = self.console.getPlayerPings(filter_client_ids=check_cids)
+            else:
+                _player_pings = self.console.getPlayerPings()
+            for cid, ping in _player_pings.items():
                 self.debug('ping %s = %s', cid, ping)
                 if ping > self._maxPing:
                     client = self.console.clients.getByCID(cid)
@@ -133,6 +137,10 @@ class PingkickerPlugin(b3.plugin.Plugin):
             self.console.getPlayerPings()
             self.debug('getPlayerPings are supported.')
             self._pings_supported = True
+            # check for filter_client_ids - older b3 versions dosnt support it
+            if self._pings_supported:
+                if 'filter_client_ids' in getargspec(self.console.getPlayerPings).args:
+                    self._filter_ids_supported = True
         except NotImplementedError:
             self.error('%s does not support pings or it has not been implemented in B3.' % self.console.game.gameName)
 
