@@ -11,7 +11,6 @@ from b3.fake import FakeConsole, FakeClient
 from b3.config import XmlConfigParser, CfgConfigParser
 from pingkicker import PingkickerPlugin
 
-#from b3.parsers.bf3 import Bf3Parser
 
 class PingkickerPluginTest(TestCase):
 
@@ -74,3 +73,18 @@ max_level_checked: 100
                               'Your ping is still too high. You will get kicked automatically.            Nothing personal!'
 
                              ], self.simon.message_history)
+
+    def test_kick(self):
+        self.joe.kick = Mock()
+        self.joe.connects('joe')
+        # joe have a highping
+        when(self.console).getPlayerPings().thenReturn({
+            self.joe.cid:666,
+        })
+        self.p._ignoreTill = 0
+        # let the pingkicker work
+        time.sleep(10)
+        self.p._ignoreTill = 90
+
+        # joe get kick for highping
+        self.joe.kick.assert_called_with('because his ping was too high for this server 666.')
