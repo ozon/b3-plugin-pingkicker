@@ -47,7 +47,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
     _interval = 0
     _maxPing = 0
     _maxPingDuration = 0
-    _max_level = 1
+    _max_level = 100
     _ignoreTill = 0
     _cronTab = None
     _clientvar_name = 'ping_info'
@@ -92,11 +92,12 @@ class PingkickerPlugin(b3.plugin.Plugin):
         return client.var(self, self._clientvar_name).value
 
     def check(self):
-        #self.console.verbose('Ping check started')
-        if self.isEnabled() and (self.console.time() > self._ignoreTill):
+        # check player pings
+        check_cids = [client.cid for client in self.console.clients.getClientsByLevel(max=self._max_level)]
+        if self.isEnabled() and (self.console.time() > self._ignoreTill) and check_cids:
             #self.console.verbose('Ping check enabled')
-            for cid, ping in self.console.getPlayerPings().items():
-                #self.console.verbose('ping %s = %s', cid, ping)
+            for cid, ping in self.console.getPlayerPings(filter_client_ids=check_cids).items():
+                self.debug('ping %s = %s', cid, ping)
                 if ping > self._maxPing:
                     client = self.console.clients.getByCID(cid)
                     if client and client.maxLevel <= self._max_level:
