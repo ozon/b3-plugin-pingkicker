@@ -1,4 +1,4 @@
-PingKicker [![Build Status](https://api.travis-ci.org/ozon/b3-plugin-pingkicker.png)](https://travis-ci.org/https://api.travis-ci.org/ozon/b3-plugin-pingkicker/])
+PingKicker [![Build Status](https://api.travis-ci.org/ozon/b3-plugin-pingkicker.png)](https://travis-ci.org/https://api.travis-ci.org/ozon/b3-plugin-pingkicker/)
 ==========
 
 This plugin can replace the default PingWatch plugin delivered with B3.  
