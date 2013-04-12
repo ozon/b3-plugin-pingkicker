@@ -61,9 +61,13 @@ class PingkickerPlugin(b3.plugin.Plugin):
         self._ignoreTill = self.console.time() + 90
 
     def onLoadConfig(self):
+        # give a warning if pingwatch plugin is enabled
+        if 'pingwatch' in self.console._plugins:
+            self.warning('It is not necessary to use this plugin and the pingwatch plugin together.\
+            If you enable this pingkicker, you should disable the pingwatch plugin.')
+
         # check for getPlayerPings support
         self._test_getPlayerPings()
-
         if not self._pings_supported:
             self.error('plugin disabled!')
             self.disable()
