@@ -66,8 +66,8 @@ max_level_checked: 100
         time.sleep(10)
         self.p._ignoreTill = 90
 
-        self.assertEqual('Your ping is too high. If you can, try to reduce it!', self.simon.message_history[0])
-        self.assertEqual('Your ping is still too high. You will get kicked automatically.            Nothing personal!', self.simon.message_history[1])
+        self.assertEqual(self.p._messages['first_ping_warning'], self.simon.message_history[0])
+        self.assertEqual(self.p._messages['reminder_ping_warning'], self.simon.message_history[1])
 
     def test_kick(self):
         self.joe.kick = Mock()
@@ -82,4 +82,5 @@ max_level_checked: 100
         self.p._ignoreTill = 90
 
         # joe get kick for highping
-        self.joe.kick.assert_called_with('because his ping was too high for this server 666.')
+        self.joe.kick.assert_called_with(self.p.getMessage('public_ping_kick_message', {'ping': '666'})
+)
