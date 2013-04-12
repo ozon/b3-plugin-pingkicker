@@ -1,13 +1,11 @@
-PingKicker
+PingKicker [![Build Status](https://api.travis-ci.org/ozon/b3-plugin-pingkicker.png)](https://travis-ci.org/https://api.travis-ci.org/ozon/b3-plugin-pingkicker/])
 ==========
 
-This plugin can replace the default PingWatch plugin delivered with B3. You should
-only use this plugin if you would like to kick players with a ping you think is too
+This plugin can replace the default PingWatch plugin delivered with B3.  
+You should only use this plugin if you would like to kick players with a ping you think is too
 high.
 
-If a player's ping is too high, he will get a few private messages
-telling what is going on and that he can be kicked because of it.
-
+If a player's ping is too high, he will get a few private messages.  
 After that, if his ping is still too high, he will be kicked and a public message
 will be shown to explain why he was kicked.
 
@@ -41,7 +39,7 @@ The following options can be configured in the file [extplugins/conf/plugin_ping
 | max_ping_duration | 90      | *how long before an offender gets kicked* |
 | max_level_checked | 100     | *which levels get ping checking*          |
 
-`[messages]`
+`[messages]`  
 Plugin messages.
 
 Support
@@ -50,19 +48,13 @@ Support is only provided on www.bigbrotherbot.net forums on the following topic:
 
 Credit
 ------
-
 This plugin has been make possible thanks to:
 
-- `Walker's work (initiator and maintainer to version 1.0.1)
-  `http://www.1stsop.nl`_
-  Walker@1stsop.nl
+- Walker's work (initiator and maintainer to version 1.0.1)  
+  http://www.1stsop.nl  
+  Walker@1stsop.nl  
 
 Contrib
 -------
-
 - documented and reproducible *bugs* can be reported on the [issue tracker](https://github.com/ozon/b3-plugin-pingkicker/issues).
 - *patches* are welcome. Send me a [pull request](http://help.github.com/send-pull-requests/).
-
-.. image:: https://api.travis-ci.org/ozon/b3-plugin-pingkicker.png
-   :alt: Build Status
-   :target: https://api.travis-ci.org/ozon/b3-plugin-pingkicker
