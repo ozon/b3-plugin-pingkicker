@@ -66,13 +66,8 @@ max_level_checked: 100
         time.sleep(10)
         self.p._ignoreTill = 90
 
-        #self.assertEqual('Your ping is too high. If you can, try to reduce it!', self.simon.message_history[0])
-        #self.assertEqual('Your ping is still too high. You will get kicked automatically.            Nothing personal!', self.simon.message_history[1])
-
-        self.assertListEqual(['Your ping is too high. If you can, try to reduce it!',
-                              'Your ping is still too high. You will get kicked automatically.            Nothing personal!'
-
-                             ], self.simon.message_history)
+        self.assertEqual('Your ping is too high. If you can, try to reduce it!', self.simon.message_history[0])
+        self.assertEqual('Your ping is still too high. You will get kicked automatically.            Nothing personal!', self.simon.message_history[1])
 
     def test_kick(self):
         self.joe.kick = Mock()
