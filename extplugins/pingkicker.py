@@ -35,6 +35,7 @@ import b3.events
 import b3.plugin
 import b3.cron
 from ConfigParser import NoOptionError
+from inspect import getargspec
 
 
 class PingInfo:
@@ -50,6 +51,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
     _ignoreTill = 0
     _cronTab = None
     _clientvar_name = 'ping_info'
+    _pings_supported = False
 
     def onStartup(self):
         self.registerEvent(b3.events.EVT_GAME_EXIT)
@@ -58,15 +60,22 @@ class PingkickerPlugin(b3.plugin.Plugin):
         self._ignoreTill = self.console.time() + 90
 
     def onLoadConfig(self):
-        self._load_messages()
-        self._load_settings()
+        # check for getPlayerPings support
+        self._test_getPlayerPings()
 
-        if self._cronTab:
-            # remove existing crontab
-            self.console.cron - self._cronTab
+        if not self._pings_supported:
+            self.error('plugin disabled!')
+            self.disable()
+        else:
+            self._load_messages()
+            self._load_settings()
 
-        self._cronTab = b3.cron.PluginCronTab(self, self.check, '*/%s' % self._interval)
-        self.console.cron + self._cronTab
+            if self._cronTab:
+                # remove existing crontab
+                self.console.cron - self._cronTab
+
+            self._cronTab = b3.cron.PluginCronTab(self, self.check, '*/%s' % self._interval)
+            self.console.cron + self._cronTab
 
     def onEvent(self, event):
         if event.type == b3.events.EVT_GAME_EXIT:
@@ -116,6 +125,15 @@ class PingkickerPlugin(b3.plugin.Plugin):
                             pingInfo._2ndPingTime = self.console.time()
                             if ping != 999:
                                 client.message(self.getMessage('first_ping_warning'))
+
+    def _test_getPlayerPings(self):
+        """Check if getPlayerPings available."""
+        try:
+            self.console.getPlayerPings()
+            self.debug('getPlayerPings are supported.')
+            self._pings_supported = True
+        except NotImplementedError:
+            self.error('%s does not support pings or it has not been implemented in B3.' % self.console.game.gameName)
 
     def _load_settings(self):
         """Load plugin settings."""
