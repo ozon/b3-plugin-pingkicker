@@ -30,7 +30,6 @@ __author__ = 'Walker'
 __version__ = '1.0.1'
 
 import b3
-import thread
 import b3.events
 import b3.plugin
 import b3.cron
@@ -74,13 +73,7 @@ class PingkickerPlugin(b3.plugin.Plugin):
         else:
             self._load_messages()
             self._load_settings()
-
-            if self._cronTab:
-                # remove existing crontab
-                self.console.cron - self._cronTab
-
-            self._cronTab = b3.cron.PluginCronTab(self, self.check, '*/%s' % self._interval)
-            self.console.cron + self._cronTab
+            self._register_crontab()
 
     def onEvent(self, event):
         if event.type == b3.events.EVT_GAME_EXIT:
@@ -193,3 +186,10 @@ class PingkickerPlugin(b3.plugin.Plugin):
             self.getMessage('public_ping_kick_message', {'ping': ''})
         except NoOptionError:
             self._messages['public_ping_kick_message'] = "because his ping was too high for this server %(ping)s."
+
+    def _register_crontab(self):
+        if self._cronTab:
+            # remove existing crontab
+            self.console.cron - self._cronTab
+        self._cronTab = b3.cron.PluginCronTab(self, self.check, '*/%s' % self._interval)
+        self.console.cron + self._cronTab
